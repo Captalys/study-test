@@ -12,7 +12,7 @@
            :db/cardinality :db.cardinality/one}
 
           {:db/ident :credit/future-value
-           :db/valueType :db.type/keyword
+           :db/valueType :db.type/float
            :db/cardinality :db.cardinality/one}
 
           {:db/ident :credit/paid-value
