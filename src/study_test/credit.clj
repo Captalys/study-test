@@ -3,7 +3,7 @@
             [datomic.api :as d]))
 
 
-(defn- valid? [credit]
+(defn valid? [credit]
   (let [blacklist #{"Luis" "Bruno"}]
     (and
      (> (:credit/value credit) 0)
@@ -47,6 +47,7 @@
                :credit/future-value 1500.00})
 
   (save! credit)
+
   ;; verify if credit is inside the database: query for owner
   (d/q '[:find (pull ?e [*])
          :where
