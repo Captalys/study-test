@@ -10,5 +10,5 @@
                  [mount "0.1.9"]
                  [midje "1.9.9"]]
   :plugins [[lein-midje "3.2.1"]]
-  :profiles {:dev {:source-paths ["src" "dev"]}}
+  :profiles {:dev {:source-paths ["src" "dev" "test"]}}
   :repl-options {:init-ns user})

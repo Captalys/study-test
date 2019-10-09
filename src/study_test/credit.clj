@@ -1,15 +1,32 @@
 (ns study-test.credit
   (:require [study-test.database :as database]
-            [datomic.api :as d]))
+            [datomic.api :as d]
+            [clojure.spec.alpha :as s]
+            [clojure.spec.gen.alpha :as gen]))
 
+(s/def :credit/owner string?)
+(s/def :credit/value float?)
+(s/def :credit/buyer string?)
+(s/def :credit/future-value float?)
 
-(defn valid? [credit]
+(s/def ::credit-spec
+  (s/keys :req [:credit/owner
+                :credit/value
+                :credit/buyer
+                :credit/future-value]))
+
+(defn valid?
+  [credit]
+  {:pre (s/valid? ::credit-spec)}
   (let [blacklist #{"Luis" "Bruno"}]
     (and
      (> (:credit/value credit) 0)
      (not (contains? blacklist (:credit/owner credit)))
      (= (:credit/buyer credit) "Captalys"))))
 
+(s/fdef valid?
+  :args (s/cat :credit ::credit-spec)
+  :ret boolean?)
 
 (defn save! [credit]
   (when (valid? credit)
@@ -22,7 +39,6 @@
 (defn update-payment [credit amount-paid]
   (let [adding (fnil + 0)]
     (update credit :credit/paid-value adding amount-paid)))
-
 
 (defn payment! [credit-owner amount-paid]
   (let [db (d/db (:connection database/server))
@@ -55,3 +71,4 @@
        db)
 
   (payment! "Wand" 200.00))
+;; => nil
